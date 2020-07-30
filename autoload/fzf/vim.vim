@@ -584,7 +584,7 @@ function! fzf#vim#gitfiles(args, ...)
   let wrapped = fzf#wrap({
   \ 'source':  'git -c color.status=always status --short --untracked-files=all',
   \ 'dir':     root,
-  \ 'options': ['--ansi', '--multi', '--nth', '2..,..', '--tiebreak=index', '--prompt', 'GitFiles?> ', '--preview', 'sh -c "(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500"']
+  \ 'options': ['--ansi', '--multi', '--nth', '2..,..', '--tiebreak=index', '--prompt', 'GitFiles?> ', '--preview', 'sh -c "(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -1000"']
   \})
   call s:remove_layout(wrapped)
   let wrapped.common_sink = remove(wrapped, 'sink*')
@@ -744,6 +744,7 @@ function! fzf#vim#grep(grep_command, has_column, ...)
   \ 'column':  a:has_column,
   \ 'options': ['--ansi', '--prompt', capname.'> ',
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
+  \             '--delimiter', ':', '--preview-window', '+{2}-5',
   \             '--color', 'hl:4,hl+:12']
   \}
   function! opts.sink(lines)
@@ -1173,7 +1174,7 @@ function! s:commits(buffer_local, args)
 
   if !s:is_win && &columns > s:wide
     call extend(options.options,
-    \ ['--preview', 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --format=format: --color=always | head -200'])
+    \ ['--preview', 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --format=format: --color=always | head -1000'])
   endif
 
   return s:fzf(a:buffer_local ? 'bcommits' : 'commits', options, a:args)
