@@ -1360,3 +1360,11 @@ endfunction
 let &cpo = s:cpo_save
 unlet s:cpo_save
 
+" Locate
+function! fzf#vim#locate_sean(cmd, ...)
+    let args = {
+    \ 'source':  a:cmd,
+    \ 'options': '-m --prompt "Locate> "'
+    \}
+    return s:fzf('locate', args, a:000)
+endfunction
